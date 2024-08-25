@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
-import Defaultimage from '@/public/assets/default.svg';
+import Defaultimage from '@/public/assets/default.png';
 
 
 async function getData(userId: string) {
@@ -65,8 +65,8 @@ const SitesRoute = async () => {
               <Image 
                 src={item.imageUrl ?? Defaultimage}
                 alt={item.name}
-                className="rounded-t-lg object-cover w-full h-[200px]"
-                width={400}
+                className="rounded-lg"
+                width={300}
                 height={200}
               />
               <CardHeader>
@@ -79,7 +79,7 @@ const SitesRoute = async () => {
               </CardHeader>
               <CardFooter>
                 <Button asChild className="w-full">
-                  <Link href="#">
+                  <Link href={`/dashboard/sites/${item.id}`}>
                     View Articles
                   </Link>
                 </Button>
