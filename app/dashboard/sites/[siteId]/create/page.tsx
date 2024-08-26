@@ -1,6 +1,7 @@
 'use client';
 
 import { UploadDropzone } from '@/app/utils/UploadthingComponents';
+import { PostSchema } from '@/app/utils/zodSchema';
 import TailwindEditor from '@/components/EditorWrapper';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,17 +14,31 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { CreatePostAction } from '@/lib/actions/actions';
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeft, Atom } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { JSONContent } from 'novel';
 import React, { useState } from 'react';
-import { toast } from "sonner"
-
+import { useFormState } from 'react-dom';
+import { toast } from 'sonner';
 
 const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
+  const [lastResult, action] = useFormState(CreatePostAction, undefined);
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate({ formData }) {
+      return parseWithZod(formData, {
+        schema: PostSchema,
+      });
+    },
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
+  });
 
   return (
     <>
@@ -41,28 +56,58 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
           <CardDescription>Small description about the article</CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col gap-6">
+          <form
+            className="flex flex-col gap-6"
+            id={form.id}
+            onSubmit={form.onSubmit}
+            action={action}
+          >
             <div className="grid gap-2">
               <Label>Title</Label>
-              <Input placeholder="Nextjs blog application" />
+              <Input
+                key={fields.title.key}
+                name={fields.title.name}
+                defaultValue={fields.title.initialValue}
+                placeholder="Nextjs blog application"
+              />
+              <p className="text-red-500 text-sm">{fields.title.errors}</p>
             </div>
             <div className="grid gap-2">
               <Label>Slug</Label>
-              <Input placeholder="Article Slug" />
+              <Input
+                placeholder="Article Slug"
+                key={fields.slug.key}
+                name={fields.slug.name}
+                defaultValue={fields.slug.initialValue}
+              />
               <Button className="w-fit mt-4" type="button" variant="secondary">
                 <Atom className="mr-2 size-4" />
                 Generate Slug
               </Button>
+              <p className="text-red-500 text-sm">{fields.slug.errors}</p>
             </div>
             <div className="grid gap-2">
               <Label>Small description</Label>
               <Textarea
+                key={fields.smallDescription.key}
+                name={fields.smallDescription.name}
+                defaultValue={fields.smallDescription.initialValue}
                 placeholder="Small description for your article... "
                 className="h-32"
               />
+              <p className="text-red-500 text-sm">
+                {fields.smallDescription.errors}
+              </p>
             </div>
             <div className="grid gap-2">
               <Label>Cover Image</Label>
+              <input
+                type="hidden"
+                key={fields.coverImage.key}
+                name={fields.coverImage.name}
+                defaultValue={fields.coverImage.initialValue}
+                value={imageUrl}
+              />
               {imageUrl ? (
                 <Image
                   src={imageUrl}
@@ -75,21 +120,32 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
                 <UploadDropzone
                   onClientUploadComplete={(res) => {
                     setImageUrl(res[0].url);
-                    toast.success("Image uploaded successfully")
+                    toast.success('Image uploaded successfully');
                   }}
                   endpoint="imageUploader"
                   onUploadError={() => {
-                    toast.error("Image upload failed")
+                    toast.error('Image upload failed');
                   }}
                 />
               )}
+              <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
             </div>
             <div className="grid gap-2">
               <label>Article Content</label>
-              <TailwindEditor onChange={setValue} initialValue={value}/>
+              <input
+                type="hidden"
+                key={fields.articleContent.key}
+                name={fields.articleContent.name}
+                defaultValue={fields.articleContent.initialValue}
+                value={JSON.stringify(value)}
+              />
+              <TailwindEditor onChange={setValue} initialValue={value} />
+              <p className="text-red-500 text-sm">
+                {fields.articleContent.errors}
+              </p>
             </div>
             <Button type="submit" className="w-fit">
-              Create Article
+              Submit
             </Button>
           </form>
         </CardContent>
