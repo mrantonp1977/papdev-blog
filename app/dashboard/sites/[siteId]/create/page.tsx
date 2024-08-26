@@ -24,10 +24,14 @@ import { JSONContent } from 'novel';
 import React, { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { toast } from 'sonner';
+import  slugify  from  'react-slugify';
+import { SubmitButtons } from '@/components/SubmitButtons';
 
 const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
+  const [title, setTitle] = useState<string | undefined>(undefined);
+  const [slug, setSlugValue] = useState<string | undefined>(undefined);
   const [lastResult, action] = useFormState(CreatePostAction, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -39,6 +43,18 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
+
+  function handleSlugGeneration() {
+    const titleInput = title;
+
+    if (titleInput?.length === 0 || titleInput === undefined) {
+      return toast.error('Title is required to generate slug');
+    }
+
+    setSlugValue(slugify(titleInput));
+
+    return toast.success('Slug generated successfully');
+  }
 
   return (
     <>
@@ -62,6 +78,7 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
             onSubmit={form.onSubmit}
             action={action}
           >
+            <input type="hidden" name='siteId' value={params.siteId}/>
             <div className="grid gap-2">
               <Label>Title</Label>
               <Input
@@ -69,6 +86,8 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
                 name={fields.title.name}
                 defaultValue={fields.title.initialValue}
                 placeholder="Nextjs blog application"
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
               />
               <p className="text-red-500 text-sm">{fields.title.errors}</p>
             </div>
@@ -79,8 +98,10 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
                 key={fields.slug.key}
                 name={fields.slug.name}
                 defaultValue={fields.slug.initialValue}
+                onChange={(e) => setSlugValue(e.target.value)}
+                value={slug}
               />
-              <Button className="w-fit mt-4" type="button" variant="secondary">
+              <Button className="w-fit mt-4" type="button" variant="secondary" onClick={handleSlugGeneration}>
                 <Atom className="mr-2 size-4" />
                 Generate Slug
               </Button>
@@ -144,9 +165,7 @@ const ArticleCreationRoute = ({ params }: { params: { siteId: string } }) => {
                 {fields.articleContent.errors}
               </p>
             </div>
-            <Button type="submit" className="w-fit">
-              Submit
-            </Button>
+            <SubmitButtons text="Create Article" />
           </form>
         </CardContent>
       </Card>
