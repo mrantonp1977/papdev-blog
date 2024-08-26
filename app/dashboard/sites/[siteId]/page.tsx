@@ -52,7 +52,7 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
           </Link>
         </Button>
         <Button asChild>
-          <Link href="#">
+          <Link href={`/dashboard/sites/${params.siteId}/create`}>
             <PlusCircle className="mr-2 size-4" />
             Create Article
           </Link>
