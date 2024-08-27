@@ -97,3 +97,32 @@ export async function DeletePostAction(formData: FormData) {
   });
   return redirect(`/dashboard/sites/${formData.get('siteId')}`);
 }
+
+export async function UpdateImageAction(formData: FormData) {
+  const user = await requireUser();
+
+  const data = await prisma.site.update({
+    where: {
+      id: formData.get('siteId') as string,
+      userId: user.id,
+    },
+    data: {
+      imageUrl: formData.get('imageUrl') as string,
+    }
+  });
+
+  return redirect(`/dashboard/sites/${formData.get('siteId')}`);
+}
+
+export async function DeleteSiteAction(formData: FormData) {
+  const user = await requireUser();
+
+  const data = await prisma.site.delete({
+    where: {
+      id: formData.get('siteId') as string,
+      userId: user.id,
+    },
+  });
+
+  return redirect('/dashboard/sites');
+}

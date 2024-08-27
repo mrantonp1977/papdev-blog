@@ -66,7 +66,7 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
           </Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="#">
+          <Link href={`/dashboard/sites/${params.siteId}/settings`}>
             <Settings className="mr-2 size-4" />
             Settings
           </Link>

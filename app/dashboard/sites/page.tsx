@@ -59,14 +59,14 @@ const SitesRoute = async () => {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
           {data.map((item) => (
             <Card key={item.id}>
               <Image 
                 src={item.imageUrl ?? Defaultimage}
                 alt={item.name}
-                className="rounded-lg"
-                width={300}
+                className="rounded-t-lg object-cover w-full h-[200px]"
+                width={400}
                 height={200}
               />
               <CardHeader>
