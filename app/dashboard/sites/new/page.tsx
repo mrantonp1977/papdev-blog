@@ -18,6 +18,7 @@ import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { siteSchema } from '@/app/utils/zodSchema';
 import { useFormState } from 'react-dom';
+import { SubmitButtons } from '@/components/SubmitButtons';
 
 const NewSiteRoute = () => {
   const [lastResult, action] = useFormState(CreateSiteAction, undefined);
@@ -81,7 +82,7 @@ const NewSiteRoute = () => {
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Submit</Button>
+            <SubmitButtons text="Create Site" />
           </CardFooter>
         </form>
       </Card>

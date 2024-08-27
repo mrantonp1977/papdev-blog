@@ -53,7 +53,7 @@ const UploadImageForm = ({siteId}: UploadImageFormProps) => {
         <form action={UpdateImageAction}>
           <input type="hidden" name='siteId' value={siteId}/>
           <input type="hidden" name='imageUrl' value={imageUrl}/>
-          <SubmitButtons text="Upload New Image" />
+          <SubmitButtons text="Change Image" />
         </form>
       </CardFooter>
     </Card>

@@ -3,15 +3,25 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
-import { PostSchema, siteSchema } from "@/app/utils/zodSchema";
+import { PostSchema, SiteCreationSchema, siteSchema } from "@/app/utils/zodSchema";
 import prisma from "@/app/utils/db";
 import { requireUser } from "@/app/utils/requireUser";
 
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser();
 
-  const submission = parseWithZod(formData, {
-    schema: siteSchema,
+  const submission = await parseWithZod(formData, {
+    schema: SiteCreationSchema({
+      async isSubdirectoryUnique() {
+        const existingSubDirectory = await prisma.site.findUnique({
+          where: {
+            subdirectory: formData.get('subdirectory') as string,
+          }
+        });
+        return !existingSubDirectory;
+      },
+    }),
+    async: true,
   });
 
   if (submission.status !== "success") {

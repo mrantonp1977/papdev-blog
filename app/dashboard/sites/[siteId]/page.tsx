@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/card';
 import Image from 'next/image';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { EmptyState } from '@/components/EmptyState';
 
 async function getData(userId: string, siteId: string) {
   const data = await prisma.post.findMany({
@@ -79,22 +80,12 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
         </Button>
       </div>
       {data === undefined || data.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in-50">
-          <div className="flex size-20 items-center justify-center rounded-full bg-primary/10">
-            <FileIcon className="text-primary size-10" />
-          </div>
-          <h2 className="text-2xl mt-6 font-semibold">No Sites created yet</h2>
-          <p className="mb-8 mt-2 text-center text-md text-muted-foreground">
-            You currently do not have any sites. Please create one or more to
-            display them here.
-          </p>
-          <Button asChild>
-            <Link href={'/dashboard/sites/new'}>
-              <PlusCircle size={18} className="mr-2" />
-              Create Site
-            </Link>
-          </Button>
-        </div>
+        <EmptyState 
+          title="No articles found" 
+          description="Create your first article by clicking the button below." 
+          buttonText="Create Article" 
+          href={`/dashboard/sites/${params.siteId}/create`}
+        />
       ) : (
         <div className="">
           <Card>
