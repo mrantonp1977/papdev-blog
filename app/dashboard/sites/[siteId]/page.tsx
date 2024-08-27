@@ -153,8 +153,16 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
                               Actions
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-500">Delete</DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/dashboard/sites/${params.siteId}/${item.id}`}>
+                                Edit
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild className="text-red-500">
+                              <Link href={`/dashboard/sites/${params.siteId}/${item.id}/delete`}>
+                                Delete
+                              </Link>
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
