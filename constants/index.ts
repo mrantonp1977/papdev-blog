@@ -13,7 +13,7 @@ export const navLinks = [
   },
   {
     name: "Pricing",
-    href: "#",
+    href: "/dashboard/pricing",
     icon: EuroIcon
   }
 ]

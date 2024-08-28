@@ -8,6 +8,7 @@ import {
   RegisterLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 import { Button } from './ui/button';
+import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -18,7 +19,7 @@ const Hero = () => {
             <Image
               src={Logo}
               alt="logo"
-              className="size-10"
+              className="size-14"
               width={40}
               height={40}
             />
@@ -44,8 +45,17 @@ const Hero = () => {
         <div className="relative items-center w-full py-12 lg:py-20">
           <div className="text-center">
             <span className="text-lg text-primary font-medium bg-primary/10 px-4 py-2 rounded-full">Ultimate Blogging SaaS for Startups</span>
+            <h1 className="mt-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold leading-none">
+              Setup your blog <span className="block text-primary">in Minutes!</span> 
+            </h1>
+            <p className="max-w-xl mx-auto mt-4 text-base font-light lg:text-xl text-muted-foreground">Setting up your blog is hard and time consuming. We make it easy for you to create a blog in minutes.</p>
+            <div className="flex items-center gap-x-5 w-full justify-center mt-8">
+              <LoginLink>
+                <Button>Try for free</Button>
+              </LoginLink>
+            </div>
           </div>
-        </div>
+        </div>        
       </section>
     </>
   );
