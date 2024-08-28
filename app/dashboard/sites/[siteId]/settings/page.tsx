@@ -25,7 +25,7 @@ export default function SettingsSiteRoute({
             <ChevronLeft className="size-6" />
           </Link>
         </Button>
-        <h3 className="text-xl font-semibold">Go back</h3>
+        <h3 className="text-xl font-semibold">Go Back</h3>
       </div>
       <UploadImageForm siteId={params.siteId} />
       <Card className="border-red-500 bg-red-500/5">

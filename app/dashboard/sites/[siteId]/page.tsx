@@ -1,7 +1,13 @@
 import prisma from '@/app/utils/db';
 import { Button } from '@/components/ui/button';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Book, FileIcon, MoreHorizontal, PlusCircle, Settings } from 'lucide-react';
+import {
+  Book,
+  FileIcon,
+  MoreHorizontal,
+  PlusCircle,
+  Settings,
+} from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -24,7 +30,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Image from 'next/image';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { EmptyState } from '@/components/EmptyState';
 
 async function getData(userId: string, siteId: string) {
@@ -38,6 +51,11 @@ async function getData(userId: string, siteId: string) {
       title: true,
       image: true,
       createdAt: true,
+      Site: {
+        select: {
+          subdirectory: true,
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
@@ -61,10 +79,14 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
     <>
       <div className="flex w-full justify-end gap-x-4">
         <Button asChild variant="outline">
-          <Link href="#">
-            <Book className="mr-2 size-4" />
-            View Blog
-          </Link>
+          {data[0]?.Site ? (
+            <Link href={`/blog/${data[0].Site.subdirectory}`}>
+              <Book className="mr-2 size-4" />
+              View Blog
+            </Link>
+          ) : (
+            <span>Blog not available</span>
+          )}
         </Button>
         <Button asChild variant="outline">
           <Link href={`/dashboard/sites/${params.siteId}/settings`}>
@@ -80,10 +102,10 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
         </Button>
       </div>
       {data === undefined || data.length === 0 ? (
-        <EmptyState 
-          title="No articles found" 
-          description="Create your first article by clicking the button below." 
-          buttonText="Create Article" 
+        <EmptyState
+          title="No articles found"
+          description="Create your first article by clicking the button below."
+          buttonText="Create Article"
           href={`/dashboard/sites/${params.siteId}/create`}
         />
       ) : (
@@ -136,21 +158,23 @@ const SiteIdRoute = async ({ params }: { params: { siteId: string } }) => {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button size="icon" variant="ghost">
-                              <MoreHorizontal className="size-4"/>
+                              <MoreHorizontal className="size-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align='center'>
-                            <DropdownMenuLabel>
-                              Actions
-                            </DropdownMenuLabel>
+                          <DropdownMenuContent align="center">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem asChild>
-                              <Link href={`/dashboard/sites/${params.siteId}/${item.id}`}>
+                              <Link
+                                href={`/dashboard/sites/${params.siteId}/${item.id}`}
+                              >
                                 Edit
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild className="text-red-500">
-                              <Link href={`/dashboard/sites/${params.siteId}/${item.id}/delete`}>
+                              <Link
+                                href={`/dashboard/sites/${params.siteId}/${item.id}/delete`}
+                              >
                                 Delete
                               </Link>
                             </DropdownMenuItem>

@@ -30,7 +30,7 @@ model Site {
   imageUrl     String?
   User         User?    @relation(fields: [userId], references: [id])
   userId       String?
-  Post         Post[]
+  posts         Post[]
 }
 
 model Post {
